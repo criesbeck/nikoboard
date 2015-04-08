@@ -17,6 +17,6 @@ function submitMood() {
 }
 
 $(function () {
-  Parse.initialize("cGac6sS2WJtg0akDM5dgy8MJRoiQm6anTUtZ5qs7", "4MrXkqIN8cx9tw9sxKukLckwLcepfHRW3CqsrZcC");
+  Parse.initialize("UgbmEOPXmE1h4MAjDtxRNok3yiOgpxCIaqKE7U1c", "2emXdn6IV5MqLmdKPLKmtt4OVB2XQvadbAB1Zuc1");
   $("#submit-btn").on("click", submitMood);
 });
