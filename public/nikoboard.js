@@ -1,5 +1,5 @@
 function submitMood() {
-  var form = document.getElementById("mood-form");
+  var form = $("#mood-form");
   var Reading = Parse.Object.extend("reading");
   var reading = new Reading();
   var team = form["team"].value;
@@ -16,7 +16,7 @@ function submitMood() {
   
 }
 
-Parse.initialize("cGac6sS2WJtg0akDM5dgy8MJRoiQm6anTUtZ5qs7", "4MrXkqIN8cx9tw9sxKukLckwLcepfHRW3CqsrZcC");
-
-
-document.getElementById("submit-btn").onclick = submitMood;
+$(function () {
+  Parse.initialize("cGac6sS2WJtg0akDM5dgy8MJRoiQm6anTUtZ5qs7", "4MrXkqIN8cx9tw9sxKukLckwLcepfHRW3CqsrZcC");
+  $("#submit-btn").on("click", submitMood);
+});
