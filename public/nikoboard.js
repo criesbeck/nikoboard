@@ -23,12 +23,24 @@ function displayError(error) {
 }
 
 // collect only most recent day's readings
+// ignore duplicate entries
 function groupDayByTeam(data, readings) {
+  var netids = [];
   readings.forEach(function(reading) {
-    if (reading.get("readingDay") == data.day) {
+    if (reading.get("readingDay") == data.day && isNew(netids, reading.get("netid"))) {
       addReading(data, reading.get("team"), reading.get("mood"));
     };
   });
+}
+
+function isNew(lst, x) {
+  if (lst.indexOf(x) == -1) {
+    lst.push(x);
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 function addReading(data, team, mood) {
