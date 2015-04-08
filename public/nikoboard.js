@@ -5,14 +5,17 @@ function submitMood() {
   var netid = $("input[name=netid]").val();
   var mood = $("input:radio[name=mood]:checked").val()
   if (team && netid && mood) {
-    console.log({ team: team, netid: netid, mood: mood });
-    return false;
+    var data = { team: team, netid: netid, mood: mood };
+    reading.save().then(function (obj) {
+      console.log("saved " + obj);
+    }, function (err) {
+      console.log(err);
+    });
   }
   else {
-    alert("fill in all three fields");
-    return false;
+    alert("specify all three items");
   }
-  
+  return false;
 }
 
 $(function () {
