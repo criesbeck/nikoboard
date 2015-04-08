@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="container">
-      <table id="team-board">
+      <table id="team-board" class="table">
       </table>
     </div>
     
@@ -17,12 +17,14 @@
     <script type="text/javascript" src="nikoboard.js"></script>
     
     <script type="text/template" id="board-template">
-      {{teams}}
+      {{#teams}}
         <tr>
           <th>{{name}}</th>
-          {{moods}}<td>{{.}}</td>{{\moods}}
+          {{#moods}}
+          <td><img src="images/{{.}}.jpg"></td>
+          {{/moods}}
         </tr>
-      {{\teams}}
+      {{/teams}}
     </script>
   </body>
 </html>

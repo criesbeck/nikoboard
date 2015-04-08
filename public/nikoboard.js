@@ -1,3 +1,9 @@
+var moodImages = {
+  happy: "face-happy",
+  neutral: "face-neutral",
+  nervous: "face-sad"
+};
+
 function updateBoard() {
   var query = new Parse.Query("Reading");
   query.equalTo("readingDay", getToday());
@@ -11,6 +17,10 @@ function displayResults(readings) {
   var rendered = Mustache.render(template, data);
   $("#team-board").html(rendered);
 }
+
+function displayError(error) {
+  $("#team-board").html(error.message);
+}
     
 function groupByTeam(readings) {
   var data = { teams: [] };
@@ -21,7 +31,7 @@ function groupByTeam(readings) {
 }
 
 function addMood(data, team, mood) {
-  getTeamData(data, team).moods.push(mood);
+  getTeamData(data, team).moods.push(getMoodImage(mood));
 }
 
 function getTeamData(data, team) {
@@ -30,11 +40,15 @@ function getTeamData(data, team) {
     teamData = data.teams[i];
     if (teamData.name == team) break;
   };
-  if (!teamData) {
+  if (i == data.teams.length) {
     teamData = { name: team, moods: [] };
-    data.push(teamData);
+    data.teams.push(teamData);
   }
   return teamData;
+}
+
+function getMoodImage(mood) {
+  return moodImages[mood];
 }
 
 function getToday() {
