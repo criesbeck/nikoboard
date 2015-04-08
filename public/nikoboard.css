@@ -1,0 +1,9 @@
+#team-board  table{
+  width: auto;
+}
+
+#team-board th {
+  border-right: 3px gray solid;
+  font-size: 250%;
+  text-align: right;
+}

@@ -14,6 +14,7 @@ function updateBoard() {
 function displayResults(readings) {
   var template = $("#board-template").html();
   var data = groupByTeam(readings);
+  data.day = getToday();
   var rendered = Mustache.render(template, data);
   $("#team-board").html(rendered);
 }

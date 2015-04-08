@@ -3,11 +3,11 @@
   <head>
     <title>Team Nikoboard</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="nikoboard.css">
+    <!-- icons from http://www.blogyourmood.com/ -->
   </head>
   <body>
-    <div class="container">
-      <table id="team-board" class="table">
-      </table>
+    <div class="container" id="team-board">
     </div>
     
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
@@ -17,6 +17,9 @@
     <script type="text/javascript" src="nikoboard.js"></script>
     
     <script type="text/template" id="board-template">
+      <h1>Moods for {{day}}</h1>
+      
+      <table class="table">
       {{#teams}}
         <tr>
           <th>{{name}}</th>
@@ -25,6 +28,7 @@
           {{/moods}}
         </tr>
       {{/teams}}
+      </table>
     </script>
   </body>
 </html>
