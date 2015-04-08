@@ -1,59 +1,44 @@
-var moodImages = {
-  happy: "face-happy",
-  neutral: "face-neutral",
-  nervous: "face-sad"
-};
 
 function updateBoard() {
   var query = new Parse.Query("Reading");
-  query.equalTo("readingDay", getToday());
-  query.ascending("team")
+  query.descending("readingDay");
+  query.ascending("team,mood");
+  query.limit(100); // assume at most 100 readings per day
   query.find().then(displayResults, displayError);
 }
 
+
 function displayResults(readings) {
   var template = $("#board-template").html();
-  var data = groupByTeam(readings);
-  data.day = getToday();
-  var rendered = Mustache.render(template, data);
-  $("#team-board").html(rendered);
+  if (readings && readings.length > 0) {
+    var data = { day: readings[0].get("readingDay"), teams: [] };
+    groupDayByTeam(data, readings);
+    var rendered = Mustache.render(template, data);
+    $("#team-board").html(rendered);
+  }
 }
 
 function displayError(error) {
   $("#team-board").html(error.message);
 }
-    
-function groupByTeam(readings) {
-  var data = { teams: [] };
+
+// collect only most recent day's readings
+function groupDayByTeam(data, readings) {
   readings.forEach(function(reading) {
-    addMood(data, reading.get("team"), reading.get("mood"));
+    if (reading.get("readingDay") == data.day) {
+      addReading(data, reading.get("team"), reading.get("mood"));
+    };
   });
-  return data;
 }
 
-function addMood(data, team, mood) {
-  getTeamData(data, team).moods.push(getMoodImage(mood));
-}
-
-function getTeamData(data, team) {
-  var teamData;
+function addReading(data, team, mood) {
   for (var i = 0; i < data.teams.length; ++i) {
-    teamData = data.teams[i];
-    if (teamData.name == team) break;
+    if (data.teams[i].name == team) {
+      data.teams[i].moods.push(mood);
+      return;
+    };
   };
-  if (i == data.teams.length) {
-    teamData = { name: team, moods: [] };
-    data.teams.push(teamData);
-  }
-  return teamData;
-}
-
-function getMoodImage(mood) {
-  return moodImages[mood];
-}
-
-function getToday() {
-  return (new Date()).toDateString();
+  data.teams.push({ name: team, moods: [ mood ] });
 }
 
 $(function () {
