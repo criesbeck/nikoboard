@@ -1,10 +1,9 @@
 function submitMood() {
-  var form = $("#mood-form");
   var Reading = Parse.Object.extend("reading");
   var reading = new Reading();
-  var team = form["team"].value;
-  var netid = form["netid"].value;
-  var mood = form["mood"].value;
+  var team = $("input:radio[name=team]:checked").val();
+  var netid = $("input:[name=netid]").val();
+  var mood = $("input:radio[name=mood]:checked").val()
   if (team && netid && mood) {
     console.log({ team: team, netid: netid, mood: mood });
     return false;
