@@ -1,6 +1,7 @@
 
-// Use Parse.Cloud.define to define as many cloud functions as you want.
-// For example:
-Parse.Cloud.define("hello", function(request, response) {
-  response.success("Hello world!");
+// get the day of the reading so we can query mood by days 
+Parse.Cloud.beforeSave("Reading", function(request, response) {
+  var today = new Date();
+  request.object.set("readingDay", today.toDateString());
+  response.success();
 });
