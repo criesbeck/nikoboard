@@ -1,12 +1,15 @@
 
 // These two lines are required to initialize Express in Cloud Code.
  express = require('express');
+ parseExpressHttpsRedirect = require('parse-express-https-redirect');
+
  app = express();
 
 // Global app configuration section
 app.set('views', 'cloud/views');  // Specify the folder to find templates
 app.set('view engine', 'ejs');    // Set the template engine
 app.use(express.bodyParser());    // Middleware for reading request body
+app.use(parseExpressHttpsRedirect());
 
 // This is an example of hooking up a request handler with a specific request
 // path and HTTP verb using the Express routing API.
@@ -17,7 +20,7 @@ app.get('/hello', function(req, res) {
 // LTI launch event
 // Eventually should verify oauth signature 
 app.post('/launch', function(req, res) {
-  res.render('launch', req.body);
+  res.render('launch', { json: JSON.stringify(req.body, null, 2) });
 });
 
 // Attach the Express app to Cloud Code.
