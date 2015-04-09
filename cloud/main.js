@@ -1,3 +1,4 @@
+require('cloud/app.js');
 
 // get the day of the reading so we can query mood by days 
 Parse.Cloud.beforeSave("Reading", function(request, response) {
