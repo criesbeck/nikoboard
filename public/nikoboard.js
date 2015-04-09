@@ -1,8 +1,7 @@
 
 function updateBoard() {
   var query = new Parse.Query("Reading");
-  query.descending("readingDay");
-  query.ascending("team,mood");
+  query.descending("createdAt");
   query.limit(100); // assume at most 100 readings per day
   query.find().then(displayResults, displayError);
 }
@@ -13,6 +12,7 @@ function displayResults(readings) {
   if (readings && readings.length > 0) {
     var data = { day: readings[0].get("readingDay"), teams: [] };
     groupDayByTeam(data, readings);
+    sortData(data);
     var rendered = Mustache.render(template, data);
     $("#team-board").html(rendered);
   }
@@ -31,6 +31,22 @@ function groupDayByTeam(data, readings) {
       addReading(data, reading.get("team"), reading.get("mood"));
     };
   });
+}
+
+// sort by team and mood
+// Note: happy,neutral,sad lexical order is just what I want 
+// Note: adding query.ascending("team,mood") after query.descending("createdAt")
+// messed up createdAt order
+
+function sortData(data) {
+  data.teams.forEach(function(team) {
+    team.moods.sort();
+  });
+  data.teams.sort(compareTeam);
+}
+
+function compareTeam(team1, team2) {
+  return team1.name.localeCompare(team2.name);
 }
 
 function isNew(lst, x) {

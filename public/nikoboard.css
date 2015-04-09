@@ -8,7 +8,11 @@ body, .btn-default, .input-short {
 
 .input-short {
   display: inline-block;
-  width: 6em;
+  width: 10em;
+}
+
+#submit-btn[disabled] {
+  opacity: 0.5;
 }
 
 .ok {

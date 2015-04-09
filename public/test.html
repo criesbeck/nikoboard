@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>sha test</title>
+<style>
+#url { display: block; }
+#encoding { whitespace: pre; p}
+</style>
+</head>
+<body>
+  <input type="text" id="url" size="60">
+
+  <div id="encoding">
+  </div>
+  
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <!-- <script src="sha1.js"></script> -->
+  <script type="text/javascript">
+  // specification at http://tools.ietf.org/html/rfc5849#section-3.4
+  function getNonDefaultPort(scheme, port) {
+    if (!port || (port == "80" && scheme == "http:") || (port == "443" && scheme == "https:")) {
+      return "";
+    }
+    else {
+      return ":" + port;
+    }
+  }
+  
+  // from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+  function fixedEncodeURIComponent (str) {
+    return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+      return '%' + c.charCodeAt(0).toString(16);
+    });
+  }
+  
+  function getParams(str) {
+    return !str ? [] : str.substr(1).split("&").map(function(part) {
+      return part.split("=").map(decodeURIComponent).map(fixedEncodeURIComponent);
+    }).map(addEmptyValue).sort(paramCompare);
+  }
+  
+  function addEmptyValue(param) {
+    return param.length == 1 ? [ param[0], "" ] : param;
+  }
+  
+  function paramCompare(p1, p2) {
+    return p1[0] < p2[0] ? -1
+      : p2[0] < p1[0] ? 1
+      : p1[1] < p2[1] ? -1
+      : p2[1] < p1[1] ? 1
+      : 0;
+  }
+  
+  function displaySignature() {
+    var parser = document.createElement("a");
+    parser.href = $("#url").val();
+    var method = "GET";
+    var scheme = parser.protocol.toLowerCase();
+    var host = parser.hostname.toLowerCase();
+    var port = getNonDefaultPort(scheme, parser.port);
+    var base_uri = fixedEncodeURIComponent(parser.pathname);
+    var params = getParams(parser.search);
+    
+    $("#encoding").text(method + "&" + scheme + host + port + "&" + base_uri + "&" + 
+      params.map(function(param) { return param.join("="); }).join("&"));
+  }
+  
+  $(function() {
+    $("#url").on("change", displaySignature);
+      
+  });
+  
+  /*
+var parts = { method: "GET",
+  url: "http://host.net/resource",
+  parameters: "name=value&name=value",
+  version: "1.0",
+  consumer_key: "abcd",
+  consumer_secret: "efgh",
+  timestamp: "1428533284",
+  token: "ijkl",
+  token_secret: "mnop",
+  nonce: "3Tf7c2suv1g",
+  signature_method: "HMAC-SHA1"
+};
+  
+var normalized = "name=value&name=value&oauth_consumer_key=abcd&oauth_nonce=3Tf7c2suv1g&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1428533284&oauth_token=ijkl&oauth_version=1.0";
+
+var signature_basestring = "GET&http%3A%2F%2Fhost.net%2Fresource&name%3Dvalue%26name%3Dvalue%26oauth_consumer_key%3Dabcd%26oauth_nonce%3D3Tf7c2suv1g%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1428533284%26oauth_token%3Dijkl%26oauth_version%3D1.0";
+
+var signature = "Jj4W0440ie0CuX8jZsqBjVx8ivo=";
+*/
+
+</script>
+</body>
+</html>

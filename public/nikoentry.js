@@ -33,10 +33,23 @@ function isValidNetId(netid) {
   return netid && /[a-zA-Z]{3}\d{3}/.test(netid);
 }
 
+function updateSubmitButton() {
+  $("#submit-btn").prop("disabled", !validInputs());
+}
+
+function validInputs() {
+  return $("input:radio[name=team]:checked").val() &&
+    $("input[name=netid]").val() &&
+    $("input:radio[name=mood]:checked").val();
+}
+
+// to fix: button checked state not reflected on reload
 $(function () {
   Parse.initialize("UgbmEOPXmE1h4MAjDtxRNok3yiOgpxCIaqKE7U1c", "2emXdn6IV5MqLmdKPLKmtt4OVB2XQvadbAB1Zuc1");
   displayTeamButtons(["aqua", "blue", "brown", "gold", "green", 
     "navy", "orange", "purple", "red", "yellow"
   ]);
+  $("input").on("change", updateSubmitButton);
   $("#submit-btn").on("click", submitMood);
+  updateSubmitButton();
 });
