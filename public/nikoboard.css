@@ -2,10 +2,6 @@ body, .btn-default, .input-short {
   font-size: 22px;
 }
 
-#team-btn-group .btn {
-  width: 5em;
-}
-
 .input-short {
   display: inline-block;
   width: 10em;

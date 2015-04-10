@@ -20,7 +20,7 @@
   <script type="text/javascript">
   // specification at http://tools.ietf.org/html/rfc5849#section-3.4
   function getNonDefaultPort(scheme, port) {
-    if (!port || (port == "80" && scheme == "http:") || (port == "443" && scheme == "https:")) {
+    if (!port || (port == "80" && scheme == "http") || (port == "443" && scheme == "https")) {
       return "";
     }
     else {
@@ -39,7 +39,7 @@
   function prepareParams(params) {
     var keys = $.map(params, function(value, key) { return key; }).filter(isProtocolParameter).sort();
     return keys.map(function(key) {
-      return fixedEncodeURIComponent(key) + "=" + fixedEncodeURIComponent(params[key]);
+      return fixedEncodeURIComponent(key + "=" + params[key]);
     });
   }
   
@@ -60,20 +60,20 @@
   }
   
   function displayBaseURL() {
-    var text = method + "&" + scheme + host + port + "&" + base_uri + "&" + prepareParams(params).join("&");
+    var text = method + "&" + base_uri + "&" + prepareParams(params).join("&");
     $("#encoding").text(text);      
     $("#given").text(params.oauth_signature);
     var shaObj = new jsSHA(text, "TEXT");
-    var hmac = shaObj.getHMAC("&agile", "TEXT", "SHA-1", "B64"); 
+    var hmac = shaObj.getHMAC("eecs394&agile", "TEXT", "SHA-1", "B64"); 
     $("#calc").text(hmac);
   }
   
   var method = "POST";
   var scheme = "https".toLowerCase();
-  var host = " nikoboard.parseapp.com".toLowerCase();
-  var port = getNonDefaultPort(scheme, 80);
+  var host = "nikoboard.parseapp.com".toLowerCase();
+  var port = getNonDefaultPort(scheme, "443");
   var url = "/launch";
-  var base_uri = fixedEncodeURIComponent(url);
+  var base_uri = fixedEncodeURIComponent(scheme + "://" + host + port + url);
   var params = {
     "oauth_consumer_key": "eecs394",
     "oauth_signature_method": "HMAC-SHA1",
