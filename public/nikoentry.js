@@ -1,12 +1,13 @@
 
 function submitMood() {
+  var course = $("input[name=course]").val();
   var team = $("input[name=team]").val();
   var netid = $("input[name=netid]").val();
   var mood = $("input:radio[name=mood]:checked").val()
   if (mood) {
     var Reading = Parse.Object.extend("Reading");
     var reading = new Reading();
-    var data = { team: team, netid: netid, mood: mood };
+    var data = { course: course, team: team, netid: netid, mood: mood };
     reading.save(data).then(function (obj) {
       $("#save-result").html("<span class='ok'>Saved!</span>");
     }, function (err) {

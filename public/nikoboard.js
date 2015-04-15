@@ -1,16 +1,27 @@
 
 function updateBoard() {
+  var course = getCourse();
   var query = new Parse.Query("Reading");
+  query.equalTo("course", course);
   query.descending("createdAt");
   query.limit(100); // assume at most 100 readings per day
   query.find().then(displayResults, displayError);
 }
 
+function getCourse() {
+  var match = /[?&]course=([^&]+)/.exec(window.location.search);
+  return match ? match[1] : null; 
+}
 
 function displayResults(readings) {
   var template = $("#board-template").html();
   if (readings && readings.length > 0) {
-    var data = { day: readings[0].get("readingDay"), teams: [] };
+    var data = { 
+      course: readings[0].get("course") || "this course", 
+      localDay: readings[0].createdAt.toDateString(),
+      readingDay: readings[0].get("readingDay"),
+      teams: [] 
+    };
     groupDayByTeam(data, readings);
     sortData(data);
     var rendered = Mustache.render(template, data);
@@ -27,7 +38,7 @@ function displayError(error) {
 function groupDayByTeam(data, readings) {
   var netids = [];
   readings.forEach(function(reading) {
-    if (reading.get("readingDay") == data.day && isNew(netids, reading.get("netid"))) {
+    if (reading.get("readingDay") == data.readingDay && isNew(netids, reading.get("netid"))) {
       addReading(data, reading.get("team"), reading.get("mood"));
     };
   });
